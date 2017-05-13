@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+              android:orientation="vertical"
+             tools:context=".views.MembersFrag">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1">
+
+
+        <Button
+            android:text="Restart Discovery"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginBottom="11dp"
+            android:id="@+id/btnRestartDiscover"
+            android:textSize="22sp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/listMembers"
+        android:layout_weight="1"/>
+</LinearLayout>

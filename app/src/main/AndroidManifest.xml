@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.example.bouda04.wifidirect">
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application
+        android:name=".framework.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".views.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".views.PublisherActivity">
+        </activity>
+        <activity android:name=".views.SubscriberActivity">
+        </activity>
+
+        <service
+            android:name=".framework.WifiP2PHandler"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+        <service
+            android:name=".framework.PublisherService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+        <service
+            android:name=".framework.ReceiverService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+
+        <activity android:name=".views.InfoActivity">
+        </activity>
+
+        <service
+            android:name=".framework.InfoService"
+            android:enabled="false"
+            android:exported="false">
+        </service>
+    </application>
+
+</manifest>
