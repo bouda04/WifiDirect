@@ -8,6 +8,8 @@ import android.os.IBinder;
 public abstract class InfoService extends Service {
     protected Object lock = new Object();
     protected boolean goAhead = false;
+    public static final String NEW_INFO = "com.info-service.new-info";
+    public static final String CLIENTS_COUNT = "com.info-service.clients-count";
 
     public InfoService() {}
 

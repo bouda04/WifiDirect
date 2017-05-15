@@ -28,10 +28,12 @@ public class PublisherActivity extends Activity implements MembersFrag.OnMembers
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publisher);
+        ((Button)findViewById(R.id.btnBroadcast)).setText("Establishing Wifi network ...");
+
         ((Button)findViewById(R.id.btnBroadcast)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(PublisherActivity.this, InfoActivity.class);
+                Intent i = new Intent(PublisherActivity.this, PublisherInfoActivity.class);
                 i.putExtra("role", myRole);
                 i.putExtra("serverIP", ip);
                 startActivity(i);
@@ -53,6 +55,18 @@ public class PublisherActivity extends Activity implements MembersFrag.OnMembers
     @Override
     public void onWifiEstablished(InetAddress ipAddress) {
         this.ip= ipAddress;
+        ((Button)findViewById(R.id.btnBroadcast)).setText("Click me, to send data ...");
+
         ((Button)findViewById(R.id.btnBroadcast)).setEnabled(true);
+    }
+
+    @Override
+    public void onWifiRestarted() {
+        ((Button)findViewById(R.id.btnBroadcast)).setEnabled(false);
+    }
+
+    @Override
+    public void onConnectingToPublisher(String name) {
+        //not needed function for Publisher
     }
 }

@@ -55,6 +55,10 @@ public class MembersAdapter extends ArrayAdapter<Member> implements WifiP2PProvi
     }
 
     public void restartDiscovery(){
+        context.stopService(new Intent(context, ReceiverService.class));
+        context.stopService(new Intent(context, PublisherService.class));
+        this.listener.onWifiRestarted();
+        stopDataService();
         wifiProvider.stopDiscovery();
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -66,6 +70,24 @@ public class MembersAdapter extends ArrayAdapter<Member> implements WifiP2PProvi
 
     }
 
+    private void stopDataService(){
+        if (MyApplication.isMyServiceRunning(PublisherService.class)) {
+            Intent intent = new Intent(context, PublisherService.class);
+            context.stopService(intent);
+        }
+        if (MyApplication.isMyServiceRunning(ReceiverService.class)) {
+            Intent intent = new Intent(context, ReceiverService.class);
+            context.stopService(intent);
+        }
+    }
+
+    public void onMemberClicked(int position){
+        if (role == Member.SUBSCRIBER_ROLE){
+            Member member = getItem(position);
+            listener.onConnectingToPublisher(member.getDisplayName());
+            wifiProvider.connectToPeer(member);
+        }
+    }
     public void stopDiscovery(){
         wifiProvider.stopDiscovery();
     }

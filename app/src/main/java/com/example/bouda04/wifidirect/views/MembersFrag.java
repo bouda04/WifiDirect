@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -62,6 +63,12 @@ public class MembersFrag extends Fragment {
             }
         });
 
+        membersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ((MembersAdapter)membersList.getAdapter()).onMemberClicked(i);
+            }
+        });
         return view;
     }
 
@@ -104,5 +111,7 @@ public class MembersFrag extends Fragment {
         public int getOwnerRole();
         public String getOwnerName();
         public void onWifiEstablished(InetAddress ipAddress);
+        public void onWifiRestarted();
+        public void onConnectingToPublisher(String name);
     }
 }

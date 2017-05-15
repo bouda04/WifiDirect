@@ -410,7 +410,7 @@ public class WifiP2PHandler extends Service implements WifiP2pManager.Connection
                 mManager.requestPeers(mChannel, new WifiP2pManager.PeerListListener() {
                     @Override
                     public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
-                        Log.d(TAG,String.format("PeerListListener: %d peers available, updating device list", wifiP2pDeviceList.getDeviceList().size()));
+                //        Log.d(TAG,String.format("PeerListListener: %d peers available, updating device list", wifiP2pDeviceList.getDeviceList().size()));
 
                         // DO WHATEVER YOU WANT HERE
                         // YOU CAN GET ACCESS TO ALL THE DEVICES YOU FOUND FROM peers OBJECT

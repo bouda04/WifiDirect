@@ -43,14 +43,11 @@
             android:exported="true">
         </service>
 
-        <activity android:name=".views.InfoActivity">
+        <activity android:name=".views.PublisherInfoActivity">
         </activity>
 
-        <service
-            android:name=".framework.InfoService"
-            android:enabled="false"
-            android:exported="false">
-        </service>
+        <activity android:name=".views.ReceiverInfoActivity">
+        </activity>
     </application>
 
 </manifest>

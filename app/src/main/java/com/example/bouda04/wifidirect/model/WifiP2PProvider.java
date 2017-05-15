@@ -115,6 +115,10 @@ public class WifiP2PProvider {
         }
     }
 
+    public void connectToPeer(Member member){
+        myWifiHandler.connect(member.getDevice(), myRole);
+    }
+
     public void setDiscoveryHandler(EventHandler evh){
         this.evh = evh;
     }
@@ -139,10 +143,9 @@ public class WifiP2PProvider {
             switch(intent.getAction()){
                 case WifiP2PHandler.WIFI_NEW_MEMBER:
                     Member member = (Member) intent.getParcelableExtra("member");
-                    if (myRole == Member.PUBLISHER_ROLE)
-                        myWifiHandler.connect(member.getDevice(), myRole);
                     if (!peers.contains(member) ) {
-
+                      //  if (myRole == Member.PUBLISHER_ROLE)
+                      //    myWifiHandler.connect(member.getDevice(), myRole);
                         if (evh != null)
                             evh.onNewDiscoveredMember(member);
                     }

@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.example.bouda04.wifidirect.views.InfoActivity;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -25,7 +26,10 @@ public class ReceiverService extends InfoService {
 
     @Override
     public void onDestroy() {
-        dataReceiver.interrupt();
+        if (dataReceiver != null) {
+            dataReceiver.interrupt();
+            dataReceiver = null;
+        }
         super.onDestroy();
     }
 
@@ -35,30 +39,37 @@ public class ReceiverService extends InfoService {
         serverIP = (InetAddress) intent.getSerializableExtra("serverIP");
         Log.d(TAG, "I am a client, connecting to GO address:" + serverIP.getHostAddress());
 
-        Thread dataReceiver = new Thread(new Runnable() {
+        dataReceiver = new Thread(new Runnable() {
             @Override
             public void run() {
                 Socket socket = new Socket();
                 try {
                     Log.d(TAG, "trying to open socket for ip: " + serverIP);
                     socket.connect(new InetSocketAddress(serverIP, PORT_NUMBER));
+                    Log.d(TAG, "socket was successfully opened");
                     InputStream inputStream = socket.getInputStream();
+                    DataInputStream din = new DataInputStream(inputStream);
                     while (true){
                         synchronized(lock) {
                             while(!goAhead)
                                 lock.wait();
                         }
-                        int b = inputStream.read();
-                        Intent i = new Intent(InfoActivity.NEW_INFO);
+                        Log.d(TAG, "waiting for data from socket...");
+                        int data = din.readInt();
 
-                        i.putExtra("info", b);
+                        Intent i = new Intent(InfoService.NEW_INFO);
+
+                        i.putExtra("info", data);
                         sendBroadcast(i);
-                        Log.d(TAG, "got this data: " + b);
+                        Log.d(TAG, "got this data: " + data);
                     }
                 } catch (IOException e) {
+                    Log.d(TAG, e.toString());
                     e.printStackTrace();
+                    return;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+
                     return;
                 }
             }

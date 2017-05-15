@@ -7,12 +7,14 @@ import android.util.Log;
 
 import com.example.bouda04.wifidirect.views.InfoActivity;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class PublisherService extends InfoService {
     private static final int PORT_NUMBER=8888;
@@ -43,7 +45,12 @@ public class PublisherService extends InfoService {
                     Log.d(TAG, "opening server socket for ip: " + serverIP.getHostAddress());
                     while (true){
                         Socket client = serverSocket.accept();
+                        Log.d(TAG, "got a new socket open request, from " + client);
                         receiversSockets.add(client);
+                        Intent i = new Intent(InfoService.CLIENTS_COUNT);
+
+                        i.putExtra("clients-count", receiversSockets.size());
+                        sendBroadcast(i);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -61,19 +68,38 @@ public class PublisherService extends InfoService {
                             while(!goAhead)
                                 lock.wait();
                         }
-                        for (Socket socket : receiversSockets) {
-                            OutputStream outputStream = socket.getOutputStream();
-                            outputStream.write(data);
+                        Iterator<Socket> iter = receiversSockets.iterator();
+                        while (iter.hasNext()){
+                            OutputStream outputStream=null;
+                            Socket socket  = iter.next();
+                            Log.d(TAG, "send data to socket: " + socket);
+                            try {
+                                outputStream = socket.getOutputStream();
+                                DataOutputStream dout = new DataOutputStream(outputStream);
+                                dout.writeInt(data);
+                            }catch(IOException e){
+                                Log.d(TAG, "removing this socket: " + socket);
+                                if (outputStream != null)
+                                    try {
+                                        outputStream.close();
+                                    } catch (IOException e1) {
+                                        e1.printStackTrace();
+                                    }
+                                iter.remove();
+                                e.printStackTrace();
+                                Intent i = new Intent(InfoService.CLIENTS_COUNT);
+
+                                i.putExtra("clients-count", receiversSockets.size());
+                                sendBroadcast(i);
+                            }
                         }
-                        Intent i = new Intent(InfoActivity.NEW_INFO);
+                        Intent i = new Intent(InfoService.NEW_INFO);
 
                         i.putExtra("info", data);
                         sendBroadcast(i);
                         Thread.sleep(1000);
                         data++;
                 }
-                }catch(IOException e){
-                    e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     return;
